@@ -66,3 +66,5 @@ Thumbs.db
 *.pid
 .docker-compose.override.yml
 
+infrastructure/bootstrap/backend/.terraform.lock.hcl
+.vscode/settings.json

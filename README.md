@@ -48,6 +48,7 @@ Internet → ALB (Public Subnet) → ECS Fargate (Private Subnet)
 │   ├── Dockerfile
 │   └── .dockerignore
 ├── terraform/
+│   ├── backend.tf
 │   ├── networking.tf
 │   ├── security_groups.tf
 │   ├── load_balancer.tf
@@ -131,9 +132,9 @@ terraform apply
 ## 🌐 Access the Application
 
 After deployment:
-
+```bash
 http://<alb-dns>
-
+```
 Test:
 ```bash
 curl http://<alb-dns>/ | jq
