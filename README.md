@@ -40,33 +40,41 @@ Internet → ALB (Public Subnet) → ECS Fargate (Private Subnet)
 
 ## 📁 Repository Structure
 
+```bash
 .
 ├── app/
 │   ├── app.py
 │   ├── requirements.txt
 │   ├── Dockerfile
 │   └── .dockerignore
-└── terraform/
-    ├── networking.tf
-    ├── security_groups.tf
-    ├── load_balancer.tf
-    ├── ecs.tf
-    ├── iam.tf
-    ├── cloudwatch.tf
-    ├── variables.tf
-    ├── terraform.tfvars
-    ├── provider.tf
-    ├── versions.tf
-    └── outputs.tf
-
+├── terraform/
+│   ├── networking.tf
+│   ├── security_groups.tf
+│   ├── load_balancer.tf
+│   ├── ecs.tf
+│   ├── iam.tf
+│   ├── cloudwatch.tf
+│   ├── variables.tf
+│   ├── terraform.tfvars
+│   ├── provider.tf
+│   ├── versions.tf
+│   └── outputs.tf
+└── bootstrap/
+    └── backend/
+        ├── main.tf
+        ├── provider.tf
+        └── versions.tf
+```
 ---
+
 
 ## 📦 Container Image
 
 The application image is publicly available on GHCR:
 
+```bash
 ghcr.io/getsan4u/particle41-time-service:latest
-
+```
 ---
 
 ## 🧰 Prerequisites
@@ -81,37 +89,43 @@ ghcr.io/getsan4u/particle41-time-service:latest
 ## 🔐 AWS Authentication
 
 ⚠️ No credentials are stored in this repository.
-
+```bash
 aws configure
+```
 
 Or:
 
+```bash
 aws configure --profile personal-ssg
 export AWS_PROFILE=personal-ssg
+```
 
 Verify:
 
+```bash
 aws sts get-caller-identity
-
+```
 ---
 
 ## 🐳 Build & Push Docker Image (if needed)
 
+```bash
 docker buildx build \
   --platform linux/amd64 \
   -t ghcr.io/getsan4u/particle41-time-service:latest \
   --push .
-
+```
 ---
 
 ## ☁️ Deploy Infrastructure
 
+```bash
 cd terraform
 
 terraform init
 terraform plan
 terraform apply
-
+```
 ---
 
 ## 🌐 Access the Application
@@ -121,19 +135,23 @@ After deployment:
 http://<alb-dns>
 
 Test:
-
-curl http://<alb-dns>/
-
+```bash
+curl http://<alb-dns>/ | jq
+```
 ---
 
 ## 📄 Example Response
-
+```JSON
 {
   "timestamp": "2026-04-13T16:27:46.907351+00:00",
   "ip": "223.181.14.182"
 }
-
+```
 ---
 
 ## 🧹 Cleanup
 
+```bash
+cd infrastructure
+terraform destroy
+```
