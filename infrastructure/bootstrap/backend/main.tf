@@ -2,9 +2,9 @@ resource "aws_s3_bucket" "tf_state" {
   bucket = "sanjid-particle41-tfstate"
 
   tags = {
-    Name       = "sanjid-particle41-tfstate"
-    ManagedBy  = "Terraform"
-    Purpose    = "Remote state backend"
+    Name      = "sanjid-particle41-tfstate"
+    ManagedBy = "Terraform"
+    Purpose   = "Remote state backend"
   }
   lifecycle {
   }
