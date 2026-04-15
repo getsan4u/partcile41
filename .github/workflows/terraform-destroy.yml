@@ -1,0 +1,42 @@
+name: Terraform Destroy (Daily)
+
+on:
+  schedule:
+    - cron: "0 18 * * *"  # 11:30 PM IST
+  workflow_dispatch:      # allow manual run
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: terraform-destroy
+  cancel-in-progress: false
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set image URI (required var)
+        run: echo "TF_VAR_container_image=ghcr.io/getsan4u/particle41-time-service:latest" >> $GITHUB_ENV
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v6.1.0
+        with:
+          aws-region: eu-west-2
+          role-to-assume: ${{secrets.aws_role_terraform_particle41}}
+          
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4  
+
+      - name: Terraform init
+        working-directory: infrastructure
+        run: terraform init
+
+      - name: Terraform destroy
+        working-directory: infrastructure
+        run: terraform destroy -auto-approve
