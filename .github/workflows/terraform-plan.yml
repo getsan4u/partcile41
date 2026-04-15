@@ -52,11 +52,30 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: tfsec scan
-        uses: aquasecurity/tfsec-action@v1.0.3
+      - name: trivy scan
+        uses: aquasecurity/trivy-action@0.35.0
         with:
-          working_directory: terraform
-          format: lovely
+          scan-type: 'config'
+          hide-progress: true
+          format: 'sarif'
+          output: trivy.txt
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Publish Trivy Output to Summary
+        run: |
+          if [[ -s trivy.txt ]]; then
+            {
+              echo "### Security Output"
+              echo "<details><summary>Click to expand</summary>"
+              echo ""
+              echo '```terraform'
+              cat trivy.txt
+              echo '```'
+              echo "</details>"
+            } >> $GITHUB_STEP_SUMMARY
+          fi
+
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
