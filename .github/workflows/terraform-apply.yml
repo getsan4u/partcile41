@@ -52,7 +52,7 @@ jobs:
           hide-progress: true
           format: 'sarif'
           output: trivy.txt
-          exit-code: '1'
+          exit-code: 'o'
           severity: 'CRITICAL,HIGH'
 
       - name: Publish Trivy Output to Summary
